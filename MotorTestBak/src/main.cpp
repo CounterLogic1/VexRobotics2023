@@ -83,8 +83,12 @@ void usercontrol(void) {
         // update your motors, etc.
         // ........................................................................
 
+        if(Controller1.Axis3.value() > 15) {
         motorL.spin(forward, Controller1.Axis3.value(), percent);
+        }
+        if(Controller1.Axis2.value() > 15) {
         motorR.spin(forward, Controller1.Axis2.value(), percent);
+        }
         wait(20, msec); // Sleep the task for a short amount of time to
                         // prevent wasted resources.
     }
