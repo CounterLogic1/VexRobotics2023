@@ -28,7 +28,7 @@ competition Competition;
 brain Brain;
 controller Controller1;
 motor motorL = motor(PORT1, ratio18_1, false);
-motor motorR = motor(PORT2, ratio18_1, false);
+motor motorR = motor(PORT2, ratio18_1, true);
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
