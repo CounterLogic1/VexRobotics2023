@@ -82,15 +82,23 @@ void usercontrol(void) {
         // Insert user code here. This is where you use the joystick values to
         // update your motors, etc.
         // ........................................................................
+        
+        // motorL.spin(forward, Controller1.Axis3.value(), percent);
+        // motorR.spin(forward, Controller1.Axis2.value(), percent);
+        
+        int l = Controller1.Axis3.value();
+        int r = Controller1.Axis2.value();
+        if(fabs(l)<10){
+            l=0;
+        }
+        motorL.spin(forward,l,percent);
 
-        if(Controller1.Axis3.value() > 15) {
-        motorL.spin(forward, Controller1.Axis3.value(), percent);
+        if(fabs(r)<10){
+            r=0;
         }
-        if(Controller1.Axis2.value() > 15) {
-        motorR.spin(forward, Controller1.Axis2.value(), percent);
-        }
+        motorR.spin(forward,r,percent);
         wait(20, msec); // Sleep the task for a short amount of time to
-                        // prevent wasted resources.
+                        // prevent wasted resources.Z
     }
 }
 
