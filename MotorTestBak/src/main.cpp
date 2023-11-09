@@ -13,6 +13,8 @@
 // Controller1          controller
 // motorL               motor         1
 // motorR               motor         2
+// airSwitch            motor         3
+// mainAirSwitch        motor         4
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -29,6 +31,8 @@ brain Brain;
 controller Controller1;
 motor motorL = motor(PORT1, ratio18_1, false);
 motor motorR = motor(PORT2, ratio18_1, true);
+motor airSwitch = motor(PORT3, ratio18_1, false);
+motor mainAirSwitch = motor(PORT4, ratio18_1, false);
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -73,6 +77,8 @@ void autonomous(void) {
 
 void usercontrol(void) {
     // User control code here, inside the loop
+    bool airSwitchState = false;
+    bool mainAirSwitchState = false;
     while (1) {
         // This is the main execution loop for the user control program.
         // Each time through the loop your program should update motor + servo
@@ -82,23 +88,42 @@ void usercontrol(void) {
         // Insert user code here. This is where you use the joystick values to
         // update your motors, etc.
         // ........................................................................
-        
+
         // motorL.spin(forward, Controller1.Axis3.value(), percent);
         // motorR.spin(forward, Controller1.Axis2.value(), percent);
-        
+
+        // tank drive
         int l = Controller1.Axis3.value();
         int r = Controller1.Axis2.value();
-        if(fabs(l)<10){
-            l=0;
+        // controller deadspace
+        if (fabs(l) < 10) {
+            l = 0;
         }
-        motorL.spin(forward,l,percent);
+        motorL.spin(forward, l, percent);
+        if (fabs(r) < 10) {
+            r = 0;
+        }
+        motorR.spin(forward, r, percent);
 
-        if(fabs(r)<10){
-            r=0;
+        // pneumatic switch
+        if (Controller1.ButtonB.pressing() == true) {
+            if (airSwitchState) {
+                airSwitch.spin(forward, 70, percent);
+                wait(250, msec);
+                airSwitch.spin(forward, 0, percent);
+                airSwitchState = false;
+                wait(1000, msec);
+            } else {
+                airSwitch.spin(forward, -70, percent);
+                wait(240, msec);
+                airSwitch.spin(forward, 0, percent);
+                airSwitchState = true;
+                wait(1000, msec);
+            }
         }
-        motorR.spin(forward,r,percent);
-        wait(20, msec); // Sleep the task for a short amount of time to
-                        // prevent wasted resources.Z
+
+        wait(20, msec);  // Sleep the task for a short amount of time to
+                         // prevent wasted resources.Z
     }
 }
 
