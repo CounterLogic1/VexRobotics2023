@@ -1,9 +1,9 @@
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
 /*    Module:       {file}                                                    */
-/*    Author:       {author}                                                  */
-/*    Created:      {date}                                                    */
-/*    Description:  {description}                                             */
+/*    Author:       {Alvin Li}                                                */
+/*    Created:      {Oct 12, 2023}                                            */
+/*    Description:  {Robot code for Over Under Competition}                   */
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 
@@ -14,7 +14,10 @@
 // motorL               motor         1
 // motorR               motor         2
 // airSwitch            motor         3
-// mainAirSwitch        motor         4
+// lift1                motor         5
+// lift2                motor         11
+// gun                  motor         9
+// claw                 motor         12
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -32,7 +35,10 @@ controller Controller1;
 motor motorL = motor(PORT1, ratio18_1, false);
 motor motorR = motor(PORT2, ratio18_1, true);
 motor airSwitch = motor(PORT3, ratio18_1, false);
-motor mainAirSwitch = motor(PORT4, ratio18_1, false);
+motor lift1 = motor(PORT5, ratio36_1, true);
+motor lift2 = motor(PORT11, ratio36_1, false);
+motor claw = motor(PORT12, ratio18_1, false);
+motor gun = motor(PORT9, ratio18_1, false);
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -78,7 +84,7 @@ void autonomous(void) {
 void usercontrol(void) {
     // User control code here, inside the loop
     bool airSwitchState = false;
-    bool mainAirSwitchState = false;
+    bool clawState = false;
     while (1) {
         // This is the main execution loop for the user control program.
         // Each time through the loop your program should update motor + servo
@@ -105,21 +111,60 @@ void usercontrol(void) {
         }
         motorR.spin(forward, r, percent);
 
-        // pneumatic switch
-        if (Controller1.ButtonB.pressing() == true) {
+        // // pneumatic switch
+        // if (Controller1.ButtonB.pressing()) {
+        //     if (airSwitchState) {
+        //         airSwitch.spin(forward, 70, percent);
+        //         wait(250, msec);
+        //         airSwitch.spin(forward, 0, percent);
+        //         airSwitchState = false;
+        //         wait(1000, msec);
+        //     } else {
+        //         airSwitch.spin(forward, -70, percent);
+        //         wait(240, msec);
+        //         airSwitch.spin(forward, 0, percent);
+        //         airSwitchState = true;
+        //         wait(1000, msec);
+        //     }
+        // }
+
+        // pneumatic switch v2
+        if (Controller1.ButtonB.pressing()) {
             if (airSwitchState) {
-                airSwitch.spin(forward, 70, percent);
-                wait(250, msec);
-                airSwitch.spin(forward, 0, percent);
+                airSwitch.spinTo(270, deg, 100);
+                wait(500, msec);
                 airSwitchState = false;
-                wait(1000, msec);
             } else {
-                airSwitch.spin(forward, -70, percent);
-                wait(240, msec);
-                airSwitch.spin(forward, 0, percent);
+                airSwitch.spinTo(90, deg, 100);
+                wait(500, msec);
                 airSwitchState = true;
-                wait(1000, msec);
             }
+        }
+
+        // // Claw
+        // if (Controller1.ButtonX.pressed()) {
+        //     if (clawState) {
+        //         claw.spin(forward, 50, percent);
+        //         clawState = false;
+        //     } else if (clawState == false) {
+        //         claw.spinTo(270, deg, 100);
+        //         clawState = true;
+        //         wait(500, msec);
+        //     }
+        // }
+
+        // Forklift
+        if (Controller1.ButtonUp.pressing()) {
+            lift1.spin(forward, 50, percent);
+            lift2.spin(forward, 50, percent);
+        } else if (Controller1.ButtonDown.pressing()) {
+            // while (!Controller1.ButtonUp.pressing()) {
+                lift1.spin(forward, -50, percent);
+                lift2.spin(forward, -50, percent);
+            // }
+        } else {
+            lift1.spin(forward, 0, percent);
+            lift2.spin(forward, 0, percent);
         }
 
         wait(20, msec);  // Sleep the task for a short amount of time to
