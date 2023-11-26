@@ -1,2 +1,2 @@
-# VexRobotics2023
-Robot code for Vex competition 2023
+# VexRobotics
+Robot code for Vex competitions
