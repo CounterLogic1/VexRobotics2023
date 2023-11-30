@@ -16,8 +16,9 @@
 // airSwitch            motor         3
 // lift1                motor         5
 // lift2                motor         11
-// gun                  motor         9
-// claw                 motor         12
+// gun                  motor         6
+// clawTop              motor         12
+// clawBot              motor         13
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -37,8 +38,9 @@ motor motorR = motor(PORT2, ratio18_1, true);
 motor airSwitch = motor(PORT3, ratio18_1, false);
 motor lift1 = motor(PORT5, ratio36_1, true);
 motor lift2 = motor(PORT11, ratio36_1, false);
-motor claw = motor(PORT12, ratio18_1, false);
-motor gun = motor(PORT9, ratio18_1, false);
+motor clawTop = motor(PORT12, ratio18_1, false);
+motor clawBot = motor(PORT13, ratio18_1, false);
+motor gun = motor(PORT6, ratio6_1, true);
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -131,11 +133,13 @@ void usercontrol(void) {
         // pneumatic switch v2
         if (Controller1.ButtonB.pressing()) {
             if (airSwitchState) {
-                airSwitch.spinTo(90, deg, 100);
+                airSwitch.setPosition(130, deg);
+                // airSwitch.spinTo(130, deg);
                 wait(500, msec);
                 airSwitchState = false;
             } else {
-                airSwitch.spinTo(270, deg, 100);
+                airSwitch.setPosition(0, deg);
+                // airSwitch.spinTo(0, deg);
                 wait(500, msec);
                 airSwitchState = true;
             }
@@ -159,12 +163,23 @@ void usercontrol(void) {
             lift2.spin(forward, 50, percent);
         } else if (Controller1.ButtonDown.pressing()) {
             // while (!Controller1.ButtonUp.pressing()) {
-                lift1.spin(forward, -50, percent);
-                lift2.spin(forward, -50, percent);
+            lift1.spin(forward, -50, percent);
+            lift2.spin(forward, -50, percent);
             // }
         } else {
             lift1.spin(forward, 0, percent);
             lift2.spin(forward, 0, percent);
+        }
+
+        // Gun
+        if (Controller1.ButtonA.pressing()) {
+            gun.spin(forward, -600, rpm);
+            wait(1000, msec);
+            gun.spin(forward, 150, percent);
+            wait(1000, msec);
+            gun.spin(forward, -600, rpm);
+            wait(700, msec);
+            
         }
 
         wait(20, msec);  // Sleep the task for a short amount of time to
