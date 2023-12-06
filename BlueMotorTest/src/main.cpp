@@ -13,7 +13,7 @@ using namespace vex;
 
 // A global instance of competition
 competition Competition;
-motor m = motor(PORT9, ratio6_1, false);
+motor m = motor(PORT13, ratio18_1, false);
 
 // define your global instances of motors and other devices here
 
@@ -61,7 +61,7 @@ void autonomous(void) {
 void usercontrol(void) {
     // User control code here, inside the loop
     while (1) {
-        m.spin(forward, 150, percent);
+        m.spin(forward, -100, percent);
         // This is the main execution loop for the user control program.
         // Each time through the loop your program should update motor + servo
         // values based on feedback from the joysticks.

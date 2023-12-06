@@ -86,7 +86,8 @@ void autonomous(void) {
 void usercontrol(void) {
     // User control code here, inside the loop
     bool airSwitchState = false;
-    bool clawState = false;
+    bool clawStateT = false;
+    bool clawStateB = false;
     while (1) {
         // This is the main execution loop for the user control program.
         // Each time through the loop your program should update motor + servo
@@ -146,16 +147,36 @@ void usercontrol(void) {
         }
 
         // // Claw
-        // if (Controller1.ButtonX.pressed()) {
-        //     if (clawState) {
-        //         claw.spin(forward, 50, percent);
-        //         clawState = false;
-        //     } else if (clawState == false) {
-        //         claw.spinTo(270, deg, 100);
-        //         clawState = true;
-        //         wait(500, msec);
-        //     }
-        // }
+        if (Controller1.ButtonL1.pressing()) {
+            if (clawStateT) {
+                clawTop.spin(forward, -100, percent);
+                wait(500, msec);
+                clawStateT = false;
+            } else if (clawStateT == false) {
+                // clawBot.spinTo(270, deg, 100);
+                clawTop.spin(forward, 100, percent);
+                wait(500, msec);
+                clawStateT = true;
+            }
+        }
+        if (Controller1.ButtonL2.pressing()) {
+            if (clawStateB) {
+                clawBot.spin(forward, -100, percent);
+                wait(500, msec);
+                clawStateB = false;
+            } else if (clawStateB == false) {
+                // clawBot.spinTo(270, deg, 100);
+                clawBot.spin(forward, 100, percent);
+                wait(500, msec);
+                clawStateB = true;
+            }
+        }
+        // Disable Claws to conserve battery
+        if (Controller1.ButtonX.pressing()) {
+            clawTop.stop();
+            clawBot.stop();
+        }
+
 
         // Forklift
         if (Controller1.ButtonUp.pressing()) {
@@ -173,14 +194,11 @@ void usercontrol(void) {
 
         // Gun
         if (Controller1.ButtonA.pressing()) {
-            gun.spin(forward, -600, rpm);
-            wait(1000, msec);
             gun.spin(forward, 150, percent);
             wait(1000, msec);
-            gun.spin(forward, -600, rpm);
-            wait(700, msec);
-            
-        }
+            gun.spin(forward, 100, percent);
+            wait(1000, msec);
+                }
 
         wait(20, msec);  // Sleep the task for a short amount of time to
                          // prevent wasted resources.Z
