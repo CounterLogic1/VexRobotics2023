@@ -88,6 +88,7 @@ void usercontrol(void) {
     bool airSwitchState = false;
     bool clawStateT = false;
     bool clawStateB = false;
+    float multiplier = 1;
     while (1) {
         // This is the main execution loop for the user control program.
         // Each time through the loop your program should update motor + servo
@@ -101,6 +102,9 @@ void usercontrol(void) {
         // motorL.spin(forward, Controller1.Axis3.value(), percent);
         // motorR.spin(forward, Controller1.Axis2.value(), percent);
 
+        // Keep catapult down
+        gun.spin(forward, -10, percent);
+
         // tank drive
         int l = Controller1.Axis3.value();
         int r = Controller1.Axis2.value();
@@ -113,6 +117,15 @@ void usercontrol(void) {
             r = 0;
         }
         motorR.spin(forward, r, percent);
+
+        // Overdrive
+        if(Controller1.ButtonR1.pressing() && Controller1.ButtonR2.pressing()) {
+            if(multiplier == 1) {
+                multiplier = 2;
+            } else if (multiplier == 2) {
+                multiplier = 1;
+            }
+        }
 
         // // pneumatic switch
         // if (Controller1.ButtonB.pressing()) {
@@ -177,7 +190,6 @@ void usercontrol(void) {
             clawBot.stop();
         }
 
-
         // Forklift
         if (Controller1.ButtonUp.pressing()) {
             lift1.spin(forward, 50, percent);
@@ -196,9 +208,9 @@ void usercontrol(void) {
         if (Controller1.ButtonA.pressing()) {
             gun.spin(forward, 150, percent);
             wait(1000, msec);
-            gun.spin(forward, 100, percent);
-            wait(1000, msec);
-                }
+            gun.spin(forward, -10, percent);
+            wait(750, msec);
+        }
 
         wait(20, msec);  // Sleep the task for a short amount of time to
                          // prevent wasted resources.Z
