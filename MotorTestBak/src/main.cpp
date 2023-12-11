@@ -42,6 +42,25 @@ motor clawTop = motor(PORT12, ratio18_1, false);
 motor clawBot = motor(PORT13, ratio18_1, false);
 motor gun = motor(PORT6, ratio6_1, true);
 
+// Control Hotkeys
+/*
+Left Track      Left Joystick
+Right Track     Right Joystick
+
+Up Arrow        Forklift Up
+Down Arrow      Forklift Down
+
+L1              Top Claw Toggle
+L2              Bottom Claw Toggle
+
+R1+R2           Toggle Sensitivity Up/Overdrive
+
+X               Relax Claws
+Y               N/A
+A               Launch Catapult
+B               Pnematic Switch for Side Flaps
+*/
+
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
 /*                                                                           */
@@ -85,7 +104,7 @@ void autonomous(void) {
 
 void usercontrol(void) {
     // User control code here, inside the loop
-    bool airSwitchState = false;
+    bool airSwitchState = true;
     bool clawStateT = false;
     bool clawStateB = false;
     float multiplier = 1;
@@ -109,18 +128,18 @@ void usercontrol(void) {
         int l = Controller1.Axis3.value();
         int r = Controller1.Axis2.value();
         // controller deadspace
-        if (fabs(l) < 10) {
+        if (fabs(l) < 13) {
             l = 0;
         }
         motorL.spin(forward, l, percent);
-        if (fabs(r) < 10) {
+        if (fabs(r) < 13) {
             r = 0;
         }
         motorR.spin(forward, r, percent);
 
         // Overdrive
-        if(Controller1.ButtonR1.pressing() && Controller1.ButtonR2.pressing()) {
-            if(multiplier == 1) {
+        if (Controller1.ButtonR1.pressing() && Controller1.ButtonR2.pressing()) {
+            if (multiplier == 1) {
                 multiplier = 2;
             } else if (multiplier == 2) {
                 multiplier = 1;
@@ -147,12 +166,12 @@ void usercontrol(void) {
         // pneumatic switch v2
         if (Controller1.ButtonB.pressing()) {
             if (airSwitchState) {
-                airSwitch.setPosition(130, deg);
+                airSwitch.spinTo(95, deg);
                 // airSwitch.spinTo(130, deg);
                 wait(500, msec);
                 airSwitchState = false;
-            } else {
-                airSwitch.setPosition(0, deg);
+            } else if (!airSwitchState) {
+                airSwitch.spinTo(-80, deg);
                 // airSwitch.spinTo(0, deg);
                 wait(500, msec);
                 airSwitchState = true;
@@ -184,6 +203,7 @@ void usercontrol(void) {
                 clawStateB = true;
             }
         }
+
         // Disable Claws to conserve battery
         if (Controller1.ButtonX.pressing()) {
             clawTop.stop();
