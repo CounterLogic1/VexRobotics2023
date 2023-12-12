@@ -17,6 +17,7 @@
 // lift1                motor         5
 // lift2                motor         11
 // gun                  motor         6
+// gun2                 motor         14
 // clawTop              motor         12
 // clawBot              motor         13
 // ---- END VEXCODE CONFIGURED DEVICES ----
@@ -40,7 +41,8 @@ motor lift1 = motor(PORT5, ratio36_1, true);
 motor lift2 = motor(PORT11, ratio36_1, false);
 motor clawTop = motor(PORT12, ratio18_1, false);
 motor clawBot = motor(PORT13, ratio18_1, false);
-motor gun = motor(PORT6, ratio6_1, true);
+motor gun = motor(PORT6, ratio18_1, true);
+motor gun2 = motor(PORT14, ratio18_1, false);
 
 // Control Hotkeys
 /*
@@ -166,12 +168,12 @@ void usercontrol(void) {
         // pneumatic switch v2
         if (Controller1.ButtonB.pressing()) {
             if (airSwitchState) {
-                airSwitch.spinTo(95, deg);
+                airSwitch.spinTo(10, deg);
                 // airSwitch.spinTo(130, deg);
                 wait(500, msec);
                 airSwitchState = false;
             } else if (!airSwitchState) {
-                airSwitch.spinTo(-80, deg);
+                airSwitch.spinTo(-50, deg);
                 // airSwitch.spinTo(0, deg);
                 wait(500, msec);
                 airSwitchState = true;
