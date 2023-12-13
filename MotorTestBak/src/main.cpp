@@ -111,7 +111,7 @@ void usercontrol(void) {
     bool clawStateB = false;
     bool gunActive = false;
     float multiplier = 1;
-    
+
     // Keep catapult down
     gun.spin(forward, -15, percent);
     gun2.spin(forward, -15, percent);
@@ -127,7 +127,6 @@ void usercontrol(void) {
 
         // motorL.spin(forward, Controller1.Axis3.value(), percent);
         // motorR.spin(forward, Controller1.Axis2.value(), percent);
-
 
         // tank drive
         int l = Controller1.Axis3.value();
