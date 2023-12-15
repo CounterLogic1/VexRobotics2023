@@ -135,11 +135,11 @@ void usercontrol(void) {
         if (fabs(l) < 13) {
             l = 0;
         }
-        motorL.spin(forward, l, percent);
+        motorL.spin(forward, l*multiplier, percent);
         if (fabs(r) < 13) {
             r = 0;
         }
-        motorR.spin(forward, r, percent);
+        motorR.spin(forward, r*multiplier, percent);
 
         // Overdrive
         if (Controller1.ButtonR1.pressing() && Controller1.ButtonR2.pressing()) {
