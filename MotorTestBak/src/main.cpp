@@ -112,9 +112,9 @@ void usercontrol(void) {
     bool gunActive = false;
     float multiplier = 1;
 
-    // Keep catapult down
-    gun.spin(forward, -15, percent);
-    gun2.spin(forward, -15, percent);
+    // // Keep catapult down
+    // gun.spin(forward, -15, percent);
+    // gun2.spin(forward, -15, percent);
     while (1) {
         // This is the main execution loop for the user control program.
         // Each time through the loop your program should update motor + servo
@@ -150,52 +150,52 @@ void usercontrol(void) {
             }
         }
 
-        // // pneumatic switch
+        // pneumatic switch
+        if (Controller1.ButtonB.pressing()) {
+            if (airSwitchState) {
+                airSwitch.spin(forward, 40, percent);
+                wait(350, msec);
+                airSwitch.stop();
+                airSwitchState = false;
+                wait(1000, msec);
+            } else {
+                airSwitch.spin(forward, -40, percent);
+                wait(350, msec);
+                airSwitch.stop();
+                airSwitchState = true;
+                wait(1000, msec);
+            }
+        }
+
+        // // pneumatic switch v2
         // if (Controller1.ButtonB.pressing()) {
         //     if (airSwitchState) {
-        //         airSwitch.spin(forward, 70, percent);
-        //         wait(250, msec);
-        //         airSwitch.spin(forward, 0, percent);
+        //         airSwitch.spinTo(10, deg);
+        //         // airSwitch.spinTo(130, deg);
+        //         wait(500, msec);
         //         airSwitchState = false;
-        //         wait(1000, msec);
-        //     } else {
-        //         airSwitch.spin(forward, -70, percent);
-        //         wait(240, msec);
-        //         airSwitch.spin(forward, 0, percent);
+        //     } else if (!airSwitchState) {
+        //         airSwitch.spinTo(-50, deg);
+        //         // airSwitch.spinTo(0, deg);
+        //         wait(500, msec);
         //         airSwitchState = true;
-        //         wait(1000, msec);
         //     }
         // }
 
-        // pneumatic switch v2
-        if (Controller1.ButtonB.pressing()) {
-            if (airSwitchState) {
-                airSwitch.spinTo(10, deg);
-                // airSwitch.spinTo(130, deg);
-                wait(500, msec);
-                airSwitchState = false;
-            } else if (!airSwitchState) {
-                airSwitch.spinTo(-50, deg);
-                // airSwitch.spinTo(0, deg);
-                wait(500, msec);
-                airSwitchState = true;
-            }
-        }
-
-        // Relax Catapult
-        if (Controller1.ButtonY.pressing()) {
-            if (gunActive) {
-                gun.stop();
-                gun2.stop();
-                wait(250, msec);
-                gunActive = false;
-            } else if (!gunActive) {
-                gun.spin(forward, -20, percent);
-                gun2.spin(forward, -20, percent);
-                wait(250, msec);
-                gunActive = true;
-            }
-        }
+        // // Relax Catapult
+        // if (Controller1.ButtonY.pressing()) {
+        //     if (gunActive) {
+        //         gun.stop();
+        //         gun2.stop();
+        //         wait(250, msec);
+        //         gunActive = false;
+        //     } else if (!gunActive) {
+        //         gun.spin(forward, -20, percent);
+        //         gun2.spin(forward, -20, percent);
+        //         wait(250, msec);
+        //         gunActive = true;
+        //     }
+        // }
 
         // // Claw
         if (Controller1.ButtonL1.pressing()) {
@@ -245,12 +245,14 @@ void usercontrol(void) {
 
         // Gun
         if (Controller1.ButtonA.pressing()) {
-            gun.spin(forward, 150, percent);
-            gun2.spin(forward, 150, percent);
-            wait(400, msec);
-            gun.spin(forward, -15, percent);
-            gun2.spin(forward, -15, percent);
-            wait(500, msec);
+            gun.spin(forward, 200, percent);
+            gun2.spin(forward, 200, percent);
+            wait(700, msec);
+            gun.stop();
+            gun2.stop();
+            // gun.spin(forward, -15, percent);
+            // gun2.spin(forward, -15, percent);
+            // wait(700, msec);
         }
 
         wait(20, msec);  // Sleep the task for a short amount of time to
