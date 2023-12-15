@@ -145,8 +145,18 @@ void usercontrol(void) {
         if (Controller1.ButtonR1.pressing() && Controller1.ButtonR2.pressing()) {
             if (multiplier == 1) {
                 multiplier = 2;
+                gun.spin(forward, 50, percent);
+                gun2.spin(forward, 50, percent);
+                wait(200, msec);
+                gun.stop();
+                gun2.stop();
             } else if (multiplier == 2) {
                 multiplier = 1;
+                gun.spin(forward, 50, percent);
+                gun2.spin(forward, 50, percent);
+                wait(200, msec);
+                gun.stop();
+                gun2.stop();
             }
         }
 
